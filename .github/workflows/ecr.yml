@@ -33,16 +33,16 @@ jobs:
          IMAGE_TAG: nodejs_demo_image
        run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile .
-        docker push nodejs_demo_image
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:nodejs_demo_image
 
     - name: Install Trivy
-      run: |
-          # Scanning files
-          trivy fs . > trivyfs.txt
-          
-  
+        run:|
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.19.2/trivy_0.19.2_Linux-64bit.tar.gz
+          tar zxvf trivy_0.19.2_Linux-64bit.tar.gz
+          sudo mv trivy /usr/local/bin/
+
     - name: Pull the Docker image
-      run: docker pull nodejs_demo_image
+      run: docker pull $ECR_REGISTRY/$ECR_REPOSITORY:nodejs_demo_image
 
     - name: Trivy image scan
-      run: trivy image nodejs_demo_image
+      run: trivy image $ECR_REGISTRY/$ECR_REPOSITORY:nodejs_demo_image
