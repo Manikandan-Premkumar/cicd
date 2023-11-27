@@ -33,8 +33,16 @@ jobs:
          IMAGE_TAG: nodejs_demo_image
        run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile .
+        docker push nodejs_demo_image
 
-    - name: Container Image Scanning with Trivy
+    - name: Install Trivy
       run: |
-          # Scan your Docker image with Trivy here
-          # Example command: trivy --exit-code 0 --severity HIGH --no-progress $ECR_REGISTRY/$ECR_REPOSITORY:nodejs_demo_image docker push $ECR_REGISTRY/$ECR_REPOSITORY:nodejs_demo_image
+          # Scanning files
+          trivy fs . > trivyfs.txt
+          
+  
+    - name: Pull the Docker image
+      run: docker pull nodejs_demo_image
+
+    - name: Trivy image scan
+      run: trivy image nodejs_demo_image
