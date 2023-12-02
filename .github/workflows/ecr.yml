@@ -5,34 +5,28 @@ on:
 
 jobs:
   build:
-    name: Build and Push to ECR
+    name: Build and Push Docker image
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: us-east-1  # Adjust the AWS region as needed
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and Push Docker image
+      - name: Build and Push Docker image to ECR
         run: |
-          docker build -t $ECR_REGISTRY/app_ecr_new:my-image-v1 .
-          docker tag $ECR_REGISTRY/app_ecr_new:my-image-v1 $ECR_REGISTRY/app_ecr_new:latest
-          docker push $ECR_REGISTRY/app_ecr_new:my-image-v1
-          docker push $ECR_REGISTRY/app_ecr_new:latest
-
-      - name: Install Trivy and Scan
-        run: |
-          wget -O /usr/local/bin/trivy https://github.com/aquasecurity/trivy/releases/download/v0.19.2/trivy_0.19.2_Linux-64bit
-          chmod +x /usr/local/bin/trivy
-          docker pull $ECR_REGISTRY/app_ecr_new:my-image-v1 || true  # Ignore error if the image doesn't exist
-          trivy image $ECR_REGISTRY/app_ecr_new:my-image-v1
-
+          docker buildx create --use
+          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/app_ecr_new:my-image-v1 .
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/app_ecr_new:my-image-v1
