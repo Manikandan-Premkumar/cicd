@@ -25,8 +25,8 @@ jobs:
 
       - name: Build and Push to ECR
         run: |
-          docker build --tag $ECR_REGISTRY/$ECR_REPOSITORY:my-image:v1 .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:my-image:v1
+          docker build --tag $ECR_REGISTRY/app_ecr_new:my-image-v1 .
+          docker push $ECR_REGISTRY/app_ecr_new:my-image-v1
 
       - name: Install Trivy
         run: |
@@ -35,8 +35,8 @@ jobs:
           sudo mv trivy /usr/local/bin/
 
       - name: Pull the Docker image
-        run: docker pull $ECR_REGISTRY/$ECR_REPOSITORY:my-image:v1
+        run: docker pull $ECR_REGISTRY/app_ecr_new:my-image-v1
 
       - name: Trivy image scan
         if: failure()  # Run Trivy scan only if the previous step (docker pull) fails
-        run: trivy image $ECR_REGISTRY/$ECR_REPOSITORY:my-image:v1
+        run: trivy image $ECR_REGISTRY/app_ecr_new:my-image-v1
