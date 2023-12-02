@@ -25,5 +25,10 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Get timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +%s)"
+
       - name: Build and Push Docker image with multiple tags
-        run: docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/app_ecr_new:$GITHUB_SHA -t $ECR_REGISTRY/app_ecr_new:new-app --push .
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t public.ecr.aws/i5j2k0s0/app_ecr_new/app_ecr_new:${{ steps.timestamp.outputs.timestamp }} -t public.ecr.aws/i5j2k0s0/app_ecr_new/app_ecr_new:new-app --push .
+
