@@ -26,4 +26,4 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build and Push Docker image with multiple tags
-        run: docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/app_ecr_new:new-app --push .
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/app_ecr_new:$GITHUB_SHA -t $ECR_REGISTRY/app_ecr_new:new-app --push .
