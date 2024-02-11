@@ -26,4 +26,13 @@ jobs:
         with:
           Push: true
           tags: manikandan1084/test:new
-          
+
+      - name: Update deployment.yaml
+         run:|
+         sed -i "s|manikandan1084/test:new|manikandan1084/manikandan1084/test:latest|g" ../deploy/deployment.yaml
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+         add: ../deploy/deployment.yaml
+         message: "Update image name in deployment.yaml"
