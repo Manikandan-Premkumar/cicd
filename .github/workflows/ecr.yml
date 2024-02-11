@@ -35,7 +35,7 @@ jobs:
       - name: Fetch deployment.yaml
         uses: actions/checkout@v2
         with:
-          path: deploy
+          path: ..deploy/deployment.yaml
 
       - name: Update deployment.yaml
         run: |
