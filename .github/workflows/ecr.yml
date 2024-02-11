@@ -27,6 +27,12 @@ jobs:
           Push: true
           tags: manikandan1084/test:new
 
+      - name: Fetch deployment.yaml
+        uses: actions/checkout@v2
+        with:
+          repository: Manikandan-Premkumar  
+          path: deploy/deployment.yaml
+
       - name: Update deployment.yaml
          run:|
          sed -i "s|manikandan1084/test:new|manikandan1084/manikandan1084/test:new2|g" ../deploy/deployment.yaml
