@@ -39,7 +39,8 @@ jobs:
 
       - name: Update deployment.yaml
         run: |
-          sed -i "s|manikandan1084/test:new|manikandan1084/manikandan1084/test:${{ github.event.inputs.tag }}|g" deploy/deployment.yaml
+           cat deployment.yaml
+           sed -i "s|manikandan1084/test:new|manikandan1084/test:${{ github.event.inputs.tag }}|g" deploy/deployment.yaml
 
 
       
