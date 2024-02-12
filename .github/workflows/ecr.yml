@@ -14,7 +14,10 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v1
-
+    
+      - name: Official SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v2.0.1
+        
       - name: Docker Login
         uses: docker/login-action@v3
         with: 
@@ -27,18 +30,7 @@ jobs:
           Push: true
           tags: manikandan1084/test:new2${{ github.event.inputs.tag }}
 
-  deploy:
-    name: Update deployment.yaml
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Fetch deployment.yaml
-        uses: actions/checkout@v2
-        with:
-          path: ..deploy/deployment.yaml
-          run: |
-           cat deployment.yaml
-           sed -i "s|manikandan1084/test:new|manikandan1084/test:${{ github.event.inputs.tag }}|g" deploy/deployment.yaml
-
+      - name: Aqua Security Trivy
+        uses: aquasecurity/trivy-action@0.17.0
 
       
