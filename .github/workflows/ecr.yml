@@ -8,29 +8,32 @@ jobs:
     name: Build and Push Docker image
     runs-on: ubuntu-latest
 
+    services:
+      sonarqube:
+        image: sonarqube:latest
+        ports:
+          - 9000:9000
+        options: --name sonarqube
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Setup Node
         uses: actions/setup-node@v1
-    
-      - name: SonarQube Container
-        run: |
-          docker run -d --name sonarqube -p 9000:9000 sonarqube:latest
 
       - name: Wait for SonarQube to Start
-        run: sleep 30s 
-
-      - name: SonarQube Scan
+        run: sleep 30s        
+      
+      - name: Official SonarQube Scan
         run: |
           docker run -v "$(pwd):/usr/src" sonarsource/sonar-scanner-cli \
-            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.host.url=http://sonarqube:9000 \
             -Dsonar.login=admin \
             -Dsonar.password=admin \
             -Dsonar.projectKey=my_project_key \
             -Dsonar.sources=./
-          
+
       - name: Docker Login
         uses: docker/login-action@v3
         with: 
@@ -45,5 +48,3 @@ jobs:
 
       - name: Aqua Security Trivy
         uses: aquasecurity/trivy-action@0.17.0
-
-      
