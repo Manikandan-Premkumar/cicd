@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v1
 
       - name: Wait for SonarQube to Start
-        run: sleep 30s        
+        run: sleep 300s        
       
       - name: Official SonarQube Scan
         run: |
