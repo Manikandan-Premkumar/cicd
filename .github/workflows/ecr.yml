@@ -7,8 +7,8 @@ jobs:
   build:
     name: Build and Push Docker image
     runs-on: ubuntu-latest
-     container:
-       image: node:16
+    container:
+      image: node:16
 
     services:
       sonarqube:
@@ -24,14 +24,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
 
-       
       - name: Official SonarQube Scan
         run: |
           docker run -v "$(pwd):/usr/src" \
-                     -e SONAR_HOST_URL=http://sonarqube:9000 \
+                     -e SONAR_HOST_URL=http://localhost:9000 \
                      -e SONAR_LOGIN=admin \
                      -e SONAR_PASSWORD=admin \
-                     --name sonarqube_scan \
                      sonarsource/sonar-scanner-cli \
                      -Dsonar.projectKey=my_project_key \
                      -Dsonar.sources=./
