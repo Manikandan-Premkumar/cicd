@@ -18,8 +18,8 @@ jobs:
       - name: Build
       - uses: sonarsource/sonarqube-scan-action@master
         env:
-          Sonar: ${{ secrets.SONAR_TOKEN }}
-          pass: ${{ secrets.SONAR_HOST_URL }} 
+          username: ${{ secrets.SONAR_TOKEN }}
+          password: ${{ secrets.SONAR_HOST_URL }} 
           
       - name: Docker Login
         uses: docker/login-action@v3
