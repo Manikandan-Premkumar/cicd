@@ -36,3 +36,11 @@ jobs:
         with:
           Push: true
           tags: manikandan1084/test:new
+
+      - name: Pull the Docker image
+        run: docker pull manikandan1084/test:new
+
+      - name: Trivy image scan
+        run: trivy image --severity high manikandan1084/test:new
+
+
