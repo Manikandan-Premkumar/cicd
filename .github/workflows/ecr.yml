@@ -41,6 +41,6 @@ jobs:
         run: docker pull manikandan1084/test:new
 
       - name: Trivy image scan
-        run: trivy image --severity high manikandan1084/test:new
+        run: trivy image --severity HIGH manikandan1084/test:new
 
 
