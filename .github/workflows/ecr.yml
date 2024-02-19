@@ -21,3 +21,18 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with: 
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_LOGIN }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5.1.0
+        with:
+          Push: true
+          tags: manikandan1084/test:new
