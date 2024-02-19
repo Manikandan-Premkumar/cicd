@@ -1,40 +1,23 @@
-name: Deploy to Docker hub
+name: Build,Analyze,scan
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - main
+
 
 jobs:
-  build:
-    name: Build and Push Docker image
+  build-analyze-scan:
+    name: Build
     runs-on: [self-hosted]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v1
-
-      - name: scan
-      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 
-      - uses: SonarSource/sonarqube-scan-action@v2.0.1
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Build and analyze with SonarQube
+        uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          
-      - name: Docker Login
-        uses: docker/login-action@v3
-        with: 
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_LOGIN }}
-
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v5.1.0
-        with:
-          Push: true
-          tags: manikandan1084/test:new
-
-      - name: Aqua Security Trivy
-        uses: aquasecurity/trivy-action@0.17.0
