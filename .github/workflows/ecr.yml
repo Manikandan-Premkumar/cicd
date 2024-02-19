@@ -1,9 +1,7 @@
 name: Build,Analyze,scan
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 
 jobs:
@@ -42,5 +40,11 @@ jobs:
 
       - name: Trivy image scan
         run: trivy image --severity HIGH manikandan1084/test:new
+
+      - name: Update kubeconfig
+        run: aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
+
+      - name: Deploy to EKS
+        run: kubectl apply -f deployment.yaml
 
 
