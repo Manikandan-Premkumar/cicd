@@ -3,6 +3,8 @@
 
 This project implements an end-to-end CI/CD pipeline using GitHub Actions to automate build, code analysis, security scanning, and deployment to Kubernetes.
 
+
+
 🧱 Architecture
 
 Flow:
@@ -15,28 +17,43 @@ Containerization: Docker
 Security: Trivy
 Cloud: AWS
 Orchestration: Kubernetes (EKS)
+
+
+
 🔁 Pipeline Workflow
 🔹 Trigger
-Manual trigger using workflow_dispatch
-🔹 Steps
-Checkout Code
-Pulls source code with full history for analysis
-SonarQube Analysis
-Detects bugs
-Identifies vulnerabilities
-Checks code quality
-Setup Node.js
-Prepares runtime environment
-Docker Login
-Authenticates with Docker Hub
-Build & Push Image
-Image pushed to:
+Manual trigger using:
+workflow_dispatch
+🔹 Step-by-Step Flow
+
+=> Checkout Code
+Pulls latest code from repository
+Full history enabled for accurate analysis
+
+=> Code Quality Analysis
+Runs SonarQube scan
+Detects bugs, vulnerabilities, code smells
+
+=> Setup Environment
+Configures Node.js runtime
+
+=> Docker Authentication
+Logs into Docker Hub using secrets
+
+=> Build & Push Image
+Builds Docker image
+Pushes to repository:
 manikandan1084/test:new
-Image Verification
-Pulls image to confirm successful push
-Trivy Security Scan
-Scans for HIGH severity vulnerabilities
-Configure EKS Access
-Connects to AWS EKS cluster
-Deploy to Kubernetes
-Applies deployment.yaml to cluster
+
+=> Image Verification
+docker pull manikandan1084/test:new
+
+=> Security Scan
+trivy image --severity HIGH manikandan1084/test:new
+Detects high severity vulnerabilities
+
+=> Configure EKS Access
+aws eks --region ap-south-1 update-kubeconfig --name EKS_CLOUD
+
+=> Deploy to Kubernetes
+kubectl apply -f deployment.yaml
